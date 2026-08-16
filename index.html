@@ -11,6 +11,12 @@
     <button id="connectBtn">1. ESP32に接続</button><br><br>
     <button id="sendBtn" disabled>2. スイッチON（送信）</button>
 
+    <!-- ボタンの下などに追加 -->
+    <br><br>
+    <label>キー入力テスト欄：</label><br>
+    <input type="text" id="keyTarget" placeholder="ここをタップしてカーソルを当ててください"
+        style="width: 80%; padding: 10px; font-size: 16px;">
+
     <script>
         const SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
         const CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
