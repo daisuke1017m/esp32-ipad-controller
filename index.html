@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ESP32 コントローラー</title>
+</head>
+
+<body>
+    <h2>iPad -> ESP32 スイッチ</h2>
+    <button id="connectBtn">1. ESP32に接続</button><br><br>
+    <button id="sendBtn" disabled>2. スイッチON（送信）</button>
+
+    <script>
+        const SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+        const CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+        let myCharacteristic;
+
+        document.getElementById('connectBtn').addEventListener('click', async () => {
+            try {
+                const device = await navigator.bluetooth.requestDevice({
+                    filters: [{ name: 'ESP32_Hybrid_Controller' }],
+                    optionalServices: [SERVICE_UUID]
+                });
+                const server = await device.gatt.connect();
+                const service = await server.getPrimaryService(SERVICE_UUID);
+                myCharacteristic = await service.getCharacteristic(CHARACTERISTIC_UUID);
+
+                alert("ESP32と接続しました！");
+                document.getElementById('sendBtn').disabled = false;
+            } catch (error) {
+                console.error(error);
+                alert("接続失敗: " + error);
+            }
+        });
+
+        document.getElementById('sendBtn').addEventListener('click', async () => {
+            if (!myCharacteristic) return;
+            const encoder = new TextEncoder();
+            // ESP32へ「Switch: ON」という文字列を送信
+            await myCharacteristic.writeValue(encoder.encode("Switch: ON\n"));
+        });
+    </script>
+</body>
+
+</html>
